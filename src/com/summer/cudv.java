@@ -57,31 +57,37 @@ public class cudv extends AnAction {
                     "\n" +
                     "\n" +
                     "}";
-            try {
-                if(!uif.exists()){
-                    uif.createNewFile();
-                    FileOutputStream fileOutputStream = new FileOutputStream(uif);
-                    fileOutputStream.write(uitext.getBytes());
-                    fileOutputStream.flush();
-                    fileOutputStream.close();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+
+                        if(!uif.exists()){
+                            uif.createNewFile();
+                            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(uif));
+                            bufferedWriter.write(uitext);
+                            bufferedWriter.close();
+                        }
+                        if(!def.exists()){
+                            def.createNewFile();
+                            FileOutputStream fileOutputStream = new FileOutputStream(def);
+                            fileOutputStream.write(detext.getBytes());
+                            fileOutputStream.flush();
+                            fileOutputStream.close();
+                        }
+                        if(!vaf.exists()){
+                            vaf.createNewFile();
+                            FileOutputStream fileOutputStream = new FileOutputStream(vaf);
+                            fileOutputStream.write(vatext.getBytes());
+                            fileOutputStream.flush();
+                            fileOutputStream.close();
+                        }
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
                 }
-                if(!def.exists()){
-                    def.createNewFile();
-                    FileOutputStream fileOutputStream = new FileOutputStream(def);
-                    fileOutputStream.write(detext.getBytes());
-                    fileOutputStream.flush();
-                    fileOutputStream.close();
-                }
-                if(!vaf.exists()){
-                    vaf.createNewFile();
-                    FileOutputStream fileOutputStream = new FileOutputStream(vaf);
-                    fileOutputStream.write(vatext.getBytes());
-                    fileOutputStream.flush();
-                    fileOutputStream.close();
-                }
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
+            }).start();
+
         }
 
 
