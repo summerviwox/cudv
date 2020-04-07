@@ -16,18 +16,27 @@ public class cudv extends AnAction {
         File file = new File(e.getData(DataKeys.PSI_FILE).getVirtualFile().getPath());
         File parent = file.getParentFile();
         if(file.getName().endsWith("CT.java")){
-            String  str = file.getName().substring(0,file.getName().length()-"CT.java".length());
-            String ui = str+"UI.java";
-            String de = str+"DE.java";
-            String va = str+"VA.java";
+            String  name = file.getName().substring(0,file.getName().length()-"CT.java".length());
+            String ui = name+"UI.java";
+            String de = name+"DE.java";
+            String va = name+"VA.java";
+            String ct = name+"CT.java";
 
             File uif = new File(parent,ui);
             File def = new File(parent,de);
             File vaf = new File(parent,va);
+            File ctf = new File(parent,ct);
             String pck="";
+            String packname = "";
             try {
                 BufferedReader reader = new BufferedReader(new FileReader(file));
                 pck  = reader.readLine();
+                String[] strs = pck.replace("package ","").split("\\.");
+
+                for(int i=0;i<Math.min(3,strs.length);i++){
+                    packname+=strs[i]+".";
+                }
+                packname = packname.substring(0,packname.length()-1);
             } catch (FileNotFoundException e1) {
                 e1.printStackTrace();
             } catch (IOException e1) {
@@ -37,7 +46,9 @@ public class cudv extends AnAction {
                     "\n" +
                     "import com.summer.x.base.ui.UI;\n"+
                     "\n" +
-                    "public class "+ui.replace(".java","")+" extends UI {\n" +
+                    "import "+packname+".databinding.Ct"+name+"Binding;\n"+
+                    "\n" +
+                    "public class "+ui.replace(".java","")+" extends UI<Ct"+name+"Binding> {\n" +
                     "\n" +
                     "\n" +
                     "}";
@@ -57,6 +68,18 @@ public class cudv extends AnAction {
                     "\n" +
                     "\n" +
                     "}";
+            String cttext = pck +'\n' +
+                    "\n" +
+                    "import com.summer.x.base.ui.XFragment;\n"+
+                    "\n" +
+                    "public class "+ct.replace(".java","")+" extends XFragment<"+
+                    ui.replace(".java","")+","+
+                    de.replace(".java","")+","+
+                    va.replace(".java","")+"> {\n" +
+                    "\n" +
+                    "\n" +
+                    "}";
+            ;
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -82,6 +105,11 @@ public class cudv extends AnAction {
                             fileOutputStream.flush();
                             fileOutputStream.close();
                         }
+
+                        FileOutputStream fileOutputStream = new FileOutputStream(ctf);
+                        fileOutputStream.write(cttext.getBytes());
+                        fileOutputStream.flush();
+                        fileOutputStream.close();
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
