@@ -17,6 +17,7 @@ public class cudv extends AnAction {
         File parent = file.getParentFile();
         if(file.getName().endsWith("CT.java")){
             String  name = file.getName().substring(0,file.getName().length()-"CT.java".length());
+            String bindname = name.substring(0,1)+(name.substring(1,name.length()).toLowerCase());
             String ui = name+"UI.java";
             String de = name+"DE.java";
             String va = name+"VA.java";
@@ -46,9 +47,9 @@ public class cudv extends AnAction {
                     "\n" +
                     "import com.summer.x.base.ui.UI;\n"+
                     "\n" +
-                    "import "+packname+".databinding.Ct"+name+"Binding;\n"+
+                    "import "+packname+".databinding.Ct"+bindname+"Binding;\n"+
                     "\n" +
-                    "public class "+ui.replace(".java","")+" extends UI<Ct"+name+"Binding> {\n" +
+                    "public class "+ui.replace(".java","")+" extends UI<Ct"+bindname+"Binding> {\n" +
                     "\n" +
                     "\n" +
                     "}";
